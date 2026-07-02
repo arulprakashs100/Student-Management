@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Profile Registration | EduManage</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link class="shared-css" rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="card-view-container">
+        <div class="glass-card registry-card staff-theme">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-user-plus"></i> Staff Registry</h2>
+                <p>Register as a university administrative member.</p>
+            </div>
+            
+            <form id="staffRegisterForm" onsubmit="event.preventDefault(); handleStaffRegister();">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="reg-staff-id">Staff ID</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-id-card"></i>
+                            <input type="text" id="reg-staff-id" placeholder="e.g. STF10293" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-staff-name">Full Name</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" id="reg-staff-name" placeholder="e.g. Prof. Sarah Connor" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-staff-email">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="email" id="reg-staff-email" placeholder="e.g. sarah.connor@university.edu" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-staff-password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="reg-staff-password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-staff-dept">Department</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-building"></i>
+                            <input type="text" id="reg-staff-dept" placeholder="e.g. Admissions" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-staff-contact">Contact Number</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-phone"></i>
+                            <input type="tel" id="reg-staff-contact" placeholder="e.g. (555) 198-2374" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group full-width">
+                    <label for="reg-staff-address">Office Address / Residential Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-house"></i>
+                        <input type="text" id="reg-staff-address" placeholder="e.g. Admin Block, Hall Room 204" required>
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <a href="staff-home.html" class="btn btn-back">
+                        <i class="fa-solid fa-chevron-left"></i> Back
+                    </a>
+                    <button type="reset" class="btn btn-secondary">
+                        <i class="fa-solid fa-arrows-rotate"></i> Reset
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-circle-check"></i> Register
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script File -->
+    <script src="staff-register.js"></script>
+</body>
+</html>

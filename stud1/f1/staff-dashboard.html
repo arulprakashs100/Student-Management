@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Administration Dashboard | EduManage</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="staff-sidebar-active">
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Generic Action Confirmation Modal (Delete & Logout) -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon warning" id="confirmModalIcon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 id="confirmModalTitle">Are you sure?</h3>
+            <p id="confirmModalText">Confirm this choice to update the database records.</p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeConfirmModal()">No</button>
+                <button class="btn btn-danger" id="confirmActionBtn">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Sidebar + Content Shell -->
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h2>EduManage</h2>
+            </div>
+            
+            <div class="user-logged-profile">
+                <i class="fa-solid fa-circle-user"></i>
+                <div>
+                    <h4 id="logged-staff-name">Staff Admin</h4>
+                    <span id="logged-staff-dept">Admissions</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a class="nav-item active" id="nav-dash" onclick="switchStaffSubView('subview-dash')">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a class="nav-item" id="nav-add" onclick="switchStaffSubView('subview-add')">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Add Student</span>
+                </a>
+                <a class="nav-item" id="nav-view" onclick="switchStaffSubView('subview-view')">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>View Students</span>
+                </a>
+                <a class="nav-item" id="nav-update" onclick="switchStaffSubView('subview-update')">
+                    <i class="fa-solid fa-user-pen"></i>
+                    <span>Update Student</span>
+                </a>
+                <a class="nav-item" id="nav-delete" onclick="switchStaffSubView('subview-delete')">
+                    <i class="fa-solid fa-user-minus"></i>
+                    <span>Delete Student</span>
+                </a>
+                <a class="nav-item" id="nav-search" onclick="switchStaffSubView('subview-search')">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Search Student</span>
+                </a>
+                <a class="nav-item" id="nav-staff-details" onclick="switchStaffSubView('subview-staff-details')">
+                    <i class="fa-solid fa-address-card"></i>
+                    <span>Staff Details</span>
+                </a>
+                <a class="nav-item logout-nav" onclick="triggerLogoutConfirm()">
+                    <i class="fa-solid fa-power-off"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p>Portal V2.0.0</p>
+                <span>Role: Staff Administrator</span>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top Navigation Bar -->
+            <header class="top-nav">
+                <div class="welcome-text">
+                    <h2 style="font-weight: 700; color: var(--color-dark-muted); letter-spacing: -0.5px;">Student Management System</h2>
+                </div>
+                
+                <div class="profile-area">
+                    <div class="staff-profile-welcome">
+                        <i class="fa-solid fa-circle-user"></i> Welcome, <span id="logged-staff-name-top">Staff Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- SUBVIEWS INSIDE MAIN WORKSPACE (Only one is visible at a time) -->
+
+            <!-- Subview A: Dashboard Summary Stats -->
+            <div id="subview-dash" class="staff-subview active-subview">
+                <section class="stats-grid">
+                    <!-- Card 1: Total Students -->
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-label">Total Students</span>
+                            <h3 class="stat-value" id="count-total-students">0 Students</h3>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2: Total Departments -->
+                    <div class="stat-card">
+                        <div class="stat-icon secondary">
+                            <i class="fa-solid fa-building-user"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-label">Total Departments</span>
+                            <h3 class="stat-value" id="count-total-depts">0</h3>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Database & Sync Status -->
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fa-solid fa-database"></i>
+                        </div>
+                        <div class="stat-details">
+                            <span class="stat-label">Database Status</span>
+                            <div class="database-status-value">
+                                <span class="db-badge-line"><span style="color:var(--color-success);">🟢</span> Connected</span>
+                                <span class="sync-badge-line">Synchronization: <span>Online</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="admin-welcome-footer-panel">
+                    <h3>Welcome Back Administrator</h3>
+                    <p>Manage student information using the left menu.</p>
+                </div>
+            </div>
+
+            <!-- Subview B: Add Student Page -->
+            <div id="subview-add" class="staff-subview">
+                <div class="panel-card form-panel max-w-700">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-user-plus"></i> Add New Student</h2>
+                        <p>Fill out the particulars below to register a new student.</p>
+                    </div>
+                    
+                    <form id="addStudentForm" onsubmit="event.preventDefault(); handleAddStudentSubmit();">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="add-stud-id">Student ID</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-id-card"></i>
+                                    <input type="text" id="add-stud-id" placeholder="e.g. STU44923" required>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="add-stud-name">Student Name</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-user"></i>
+                                    <input type="text" id="add-stud-name" placeholder="John Doe" required>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="add-stud-email">Email Address</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <input type="email" id="add-stud-email" placeholder="john.doe@university.edu" required>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="add-stud-password">Initial Password</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-lock"></i>
+                                    <input type="password" id="add-stud-password" placeholder="e.g. Pass123!" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="add-stud-dept">Department</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-building"></i>
+                                    <input type="text" id="add-stud-dept" placeholder="Computer Science" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="add-stud-contact">Contact Number</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <input type="tel" id="add-stud-contact" placeholder="e.g. (555) 019-2834" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label for="add-stud-address">Residential Address</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-house"></i>
+                                <input type="text" id="add-stud-address" placeholder="123 University Drive" required>
+                            </div>
+                        </div>
+
+                        <div class="form-buttons" style="border-top:none; padding-top:0;">
+                            <button type="button" class="btn btn-secondary" onclick="clearAddForm()">
+                                <i class="fa-solid fa-arrows-rotate"></i> Clear
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Student
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Subview C: View Students Page -->
+            <div id="subview-view" class="staff-subview">
+                <div class="panel-card table-panel">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-table-list"></i> Enrolled Student Directory</h2>
+                        <p>Total registry list inside the database.</p>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="directoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Contact Number</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="directoryTableBody">
+                                <!-- Dynamically populated by JS -->
+                            </tbody>
+                        </table>
+                        
+                        <div id="directoryEmptyState" class="empty-state" style="display: none;">
+                            <div class="empty-icon"><i class="fa-solid fa-folder-open"></i></div>
+                            <h3>No Students Registered</h3>
+                            <p>No active student logs were found in the database.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subview D: Update Student Page (Split into List vs Edit Form) -->
+            <div id="subview-update" class="staff-subview">
+                <!-- Tab View 1: Student List -->
+                <div class="panel-card table-panel" id="update-list-container">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-user-pen"></i> Select Student to Update</h2>
+                        <p>Click the Edit button beside any student to modify their credentials.</p>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="updateStudentListTable">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Department</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="updateStudentListTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab View 2: Edit Form (Hidden by default) -->
+                <div class="panel-card form-panel max-w-700" id="update-form-container" style="display: none;">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-user-pen"></i> Edit Student Form</h2>
+                        <p id="update-form-subtitle">Modify student profile parameters.</p>
+                    </div>
+
+                    <form id="updateStudentForm" onsubmit="event.preventDefault(); handleUpdateStudentSubmit();">
+                        <input type="hidden" id="update-stud-id-pk">
+                        
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label for="update-stud-id">Student ID</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-id-card"></i>
+                                    <input type="text" id="update-stud-id" placeholder="e.g. STU44923" required>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="update-stud-name">Student Name</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-user"></i>
+                                    <input type="text" id="update-stud-name" placeholder="John Doe" required>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="update-stud-email">Email Address</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <input type="email" id="update-stud-email" placeholder="john.doe@university.edu" required>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="update-stud-password">Password (Leave blank to keep current)</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-lock"></i>
+                                    <input type="password" id="update-stud-password" placeholder="••••••••">
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="update-stud-dept">Department</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-building"></i>
+                                    <input type="text" id="update-stud-dept" placeholder="Computer Science" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="update-stud-contact">Contact Number</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <input type="tel" id="update-stud-contact" placeholder="e.g. (555) 019-2834" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label for="update-stud-address">Residential Address</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-house"></i>
+                                <input type="text" id="update-stud-address" placeholder="123 University Drive" required>
+                            </div>
+                        </div>
+
+                        <div class="form-actions" style="border-top:none; padding-top:0; margin-top:20px;">
+                            <button type="button" class="btn btn-secondary" onclick="cancelUpdate()">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Update
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Subview E: Delete Student Page with Recently Deleted Logs -->
+            <div id="subview-delete" class="staff-subview">
+                <!-- Student Records -->
+                <div class="panel-card delete-list-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header">
+                        <h2>Student Records</h2>
+                        <p>Select student to delete from registry.</p>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="deleteSearchTable" class="delete-search-table">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deleteSearchTableBody">
+                                <!-- Dynamic delete entries -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Recent Delete Logs -->
+                <div class="panel-card recently-deleted-panel">
+                    <div class="panel-header">
+                        <h2>Recent Delete Logs</h2>
+                        <p>Logs of deleted students in this session.</p>
+                    </div>
+                    
+                    <div class="delete-log-wrapper" id="recentlyDeletedList">
+                        <!-- Dynamic logs formatted exactly like:
+                        Student ID : ST101
+                        Deleted By : Admin
+                        Deleted Time : 27-06-2026 02:30 PM
+                        -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subview F: Search Student Page -->
+            <div id="subview-search" class="staff-subview">
+                <div class="panel-card search-page-panel">
+                    <div class="panel-header">
+                        <h2>Search Student Records</h2>
+                        <p>Locate student profiles using ID or Name.</p>
+                    </div>
+                    
+                    <div class="search-form-row">
+                        <div class="input-group search-bar-large">
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="searchPageViewInput" placeholder="Enter student's Name or Student ID..." onkeyup="handleSearchPageView()">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="search-results-container">
+                        <table id="searchResultsTable" class="search-table" style="display:none;">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Email Address</th>
+                                    <th>Department</th>
+                                    <th>Contact</th>
+                                    <th>Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="searchResultsTableBody">
+                                <!-- Dynamic Search Rows -->
+                            </tbody>
+                        </table>
+                        
+                        <div id="searchEmptyState" class="empty-state-search">
+                            <div class="empty-icon"><i class="fa-solid fa-circle-question"></i></div>
+                            <h3>Awaiting Search Query</h3>
+                            <p>Type in the input box above to instantly fetch matching students.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subview G: Staff Details View -->
+            <div id="subview-staff-details" class="staff-subview">
+                <div class="panel-card max-w-700">
+                    <div class="panel-header">
+                        <h2>Staff Details</h2>
+                        <p>Your logged-in administrative profile credentials.</p>
+                    </div>
+                    
+                    <div class="profile-layout" style="box-shadow: none; border: 1px solid var(--border-color); margin-bottom: 24px;">
+                        <div class="profile-side">
+                            <div class="profile-avatar">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <h3 id="staff-detail-name">Staff Name</h3>
+                            <p class="role-badge">Administrator</p>
+                        </div>
+                        
+                        <div class="profile-details-grid" style="padding: 24px;">
+                            <div class="detail-card">
+                                <div class="detail-icon"><i class="fa-solid fa-id-card"></i></div>
+                                <div class="detail-info">
+                                    <span class="detail-label">Staff ID</span>
+                                    <span class="detail-val" id="staff-detail-id">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-card">
+                                <div class="detail-icon"><i class="fa-solid fa-envelope"></i></div>
+                                <div class="detail-info">
+                                    <span class="detail-label">Email Address</span>
+                                    <span class="detail-val" id="staff-detail-email">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-card">
+                                <div class="detail-icon"><i class="fa-solid fa-building"></i></div>
+                                <div class="detail-info">
+                                    <span class="detail-label">Department</span>
+                                    <span class="detail-val" id="staff-detail-dept">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-card">
+                                <div class="detail-icon"><i class="fa-solid fa-phone"></i></div>
+                                <div class="detail-info">
+                                    <span class="detail-label">Contact Number</span>
+                                    <span class="detail-val" id="staff-detail-contact">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-card full-span">
+                                <div class="detail-icon"><i class="fa-solid fa-house"></i></div>
+                                <div class="detail-info">
+                                    <span class="detail-label">Residential Address</span>
+                                    <span class="detail-val" id="staff-detail-address">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions" style="margin-top:20px; display:flex; gap:12px;">
+                        <button class="btn btn-secondary" onclick="showToast('Profile editing enabled soon!', 'info')">
+                            Edit Profile
+                        </button>
+                        <button class="btn btn-primary" onclick="showToast('Password change wizard loaded!', 'info')">
+                            Change Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Script File -->
+    <script src="staff-dashboard.js"></script>
+</body>
+</html>

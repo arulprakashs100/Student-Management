@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login | EduManage</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link class="shared-css" rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="card-view-container">
+        <div class="glass-card authentication-card">
+            <div class="card-header text-center">
+                <div class="card-icon"><i class="fa-solid fa-user-graduate"></i></div>
+                <h2>Student Login</h2>
+                <p>Sign in using your student email credentials</p>
+            </div>
+            
+            <form id="studentLoginForm" onsubmit="event.preventDefault(); handleStudentLogin();">
+                <div class="input-group">
+                    <label for="login-stud-email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="login-stud-email" placeholder="john.doe@university.edu" required>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="login-stud-password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="login-stud-password" placeholder="••••••••" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary full-width-btn">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </button>
+                
+                <a href="student-home.html" class="btn btn-back full-width-btn text-center">
+                    <i class="fa-solid fa-chevron-left"></i> Back
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script File -->
+    <script src="student-login.js"></script>
+</body>
+</html>

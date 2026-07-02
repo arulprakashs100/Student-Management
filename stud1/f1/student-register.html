@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile Registration | EduManage</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="card-view-container">
+        <div class="glass-card registry-card">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-user-plus"></i> Student Registry</h2>
+                <p>Create your credentials to sync with the university database.</p>
+            </div>
+            
+            <form id="studentRegisterForm" onsubmit="event.preventDefault(); handleStudentRegister();">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="reg-stud-id">Student ID</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-id-card"></i>
+                            <input type="text" id="reg-stud-id" placeholder="e.g. STU12345" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-stud-name">Full Name</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" id="reg-stud-name" placeholder="e.g. John Doe" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-stud-email">Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="email" id="reg-stud-email" placeholder="e.g. john.doe@university.edu" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-stud-password">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="reg-stud-password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-stud-dept">Department</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-building"></i>
+                            <input type="text" id="reg-stud-dept" placeholder="e.g. Computer Science" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="reg-stud-contact">Contact Number</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-phone"></i>
+                            <input type="tel" id="reg-stud-contact" placeholder="e.g. (555) 019-2834" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group full-width">
+                    <label for="reg-stud-address">Residential Address</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-house"></i>
+                        <input type="text" id="reg-stud-address" placeholder="e.g. 123 University Drive" required>
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <a href="student-home.html" class="btn btn-back">
+                        <i class="fa-solid fa-chevron-left"></i> Back
+                    </a>
+                    <button type="reset" class="btn btn-secondary">
+                        <i class="fa-solid fa-arrows-rotate"></i> Reset
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-circle-check"></i> Register
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script File -->
+    <script src="student-register.js"></script>
+</body>
+</html>
